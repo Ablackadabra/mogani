@@ -1,0 +1,6 @@
+{
+  "name": "Smart Home Design",
+  "description": "Furniture marketplace, custom chair & table ordering, and upholstery restoration platform with direct buyer-seller chat and MoMo/bank payments.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
