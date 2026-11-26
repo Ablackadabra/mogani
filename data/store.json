@@ -465,9 +465,11 @@
   "sessionSecret": "0f12368dce9331c2dd3dced01901f722fa1c998aad7e197ec4621f642f4d09cb",
   "settings": {
     "platformName": "JOKEVE FURNITURE",
-    "adminEmail": "12345678",
+    "adminEmail": "ablackeagle@gmail.com",
     "defaultMomoCode": "*182*8*1*448210#",
     "defaultBankAccount": "BK · 00040-0692145-18",
-    "supportPhone": "+250 788 412 890"
+    "supportPhone": "+250 788 412 890",
+    "adBannerTitle": "",
+    "adBannerText": ""
   }
 }
