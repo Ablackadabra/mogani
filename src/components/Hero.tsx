@@ -89,7 +89,21 @@ export function Hero({
     setLoginError('');
     setLoginBusy(true);
     try {
-      if (adminState.isAdminEmail) {
+      let isAdmin = adminState.isAdminEmail;
+      if (!isAdmin && identifier.trim().includes('@')) {
+        const check = await identifyAccount(identifier.trim());
+        setAdminState(check);
+        isAdmin = check.isAdminEmail;
+      }
+      if (isAdmin) {
+        if (!adminEmailVerified) {
+          setLoginError(
+            lang === 'rw'
+              ? 'Email ya Administrator yamenyekanye. Emeza akazu ka Verify Admin Email hasi ubone kwinjira.'
+              : 'Administrator email detected. Check the Verify Admin Email box below to continue.'
+          );
+          return;
+        }
         const res = await adminLogin({
           email: identifier.trim(),
           password,
@@ -468,7 +482,7 @@ export function Hero({
                 <div className="flex flex-wrap items-center gap-3 pt-1">
                   <button
                     type="submit"
-                    disabled={loginBusy || (adminState.isAdminEmail && !adminEmailVerified)}
+                    disabled={loginBusy}
                     className="flex-1 py-2.5 px-5 text-xs font-medium text-white bg-[#1C1917] rounded-md hover:bg-[#332E2A] disabled:opacity-50 transition-colors cursor-pointer whitespace-nowrap"
                   >
                     {loginBusy

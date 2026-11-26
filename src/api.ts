@@ -120,11 +120,28 @@ async function apiFetch<T>(url: string, options: RequestInit = {}): Promise<T> {
     headers.set('Authorization', `Bearer ${authToken}`);
   }
   const res = await fetch(url, { ...options, headers });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const errMsg = typeof data?.error === 'string' ? data.error : `Request failed (${res.status})`;
+  const contentType = res.headers.get('content-type') || '';
+  const data = contentType.includes('application/json')
+    ? await res.json().catch(() => ({}))
+    : await res
+        .text()
+        .then((txt) => {
+          try {
+            return JSON.parse(txt);
+          } catch {
+            return { _nonJson: true };
+          }
+        })
+        .catch(() => ({ _nonJson: true }));
+  if (!res.ok || data?._nonJson) {
+    const errMsg =
+      typeof data?.error === 'string'
+        ? data.error
+        : data?._nonJson
+        ? `API backend (${url}) is not active on this host. Deploy using Git or Netlify CLI with netlify/functions enabled (not static dist-only drag-and-drop).`
+        : `Request failed (${res.status})`;
     notifyIfAuthRevoked(res.status, errMsg, hadToken);
-    throw new ApiError(errMsg, res.status);
+    throw new ApiError(errMsg, data?._nonJson ? 503 : res.status);
   }
   return data as T;
 }

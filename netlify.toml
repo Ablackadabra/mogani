@@ -5,6 +5,7 @@
 
 [functions]
   node_bundler = "esbuild"
+  external_node_modules = ["express", "serverless-http", "@netlify/blobs", "@google/genai"]
   included_files = ["data/**"]
 
 [[redirects]]

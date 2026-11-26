@@ -21,7 +21,14 @@ function isRunningOnNetlify(): boolean {
 
 const LOCAL_DATA_DIR = path.resolve(ROOT_DIR, 'data');
 const TMP_DATA_DIR = path.resolve('/tmp', 'jokeve-data');
-const BUNDLED_STORE_PATH = path.resolve(LOCAL_DATA_DIR, 'store.json');
+const BUNDLED_STORE_CANDIDATES = [
+  path.resolve(process.cwd(), 'data', 'store.json'),
+  path.resolve(__dirname, 'data', 'store.json'),
+  path.resolve(ROOT_DIR, 'data', 'store.json'),
+];
+const BUNDLED_STORE_PATH =
+  BUNDLED_STORE_CANDIDATES.find((p) => fs.existsSync(p)) ||
+  path.resolve(LOCAL_DATA_DIR, 'store.json');
 
 export interface GeoLocation {
   lat: number;

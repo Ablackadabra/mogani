@@ -71,7 +71,21 @@ export function AuthModal({ lang, onClose, onSuccess }: AuthModalProps) {
     setBusy(true);
     try {
       if (mode === 'login') {
-        if (adminState.isAdminEmail) {
+        let isAdmin = adminState.isAdminEmail;
+        if (!isAdmin && identifier.trim().includes('@')) {
+          const check = await identifyAccount(identifier.trim());
+          setAdminState(check);
+          isAdmin = check.isAdminEmail;
+        }
+        if (isAdmin) {
+          if (!adminEmailVerified) {
+            setError(
+              lang === 'rw'
+                ? 'Email ya Administrator yamenyekanye. Emeza akazu ka Verify Administrator Email hasi ubone kwinjira.'
+                : 'Administrator email detected. Check the Verify Administrator Email box below to continue.'
+            );
+            return;
+          }
           const res = await adminLogin({
             email: identifier.trim(),
             password,
@@ -430,7 +444,7 @@ export function AuthModal({ lang, onClose, onSuccess }: AuthModalProps) {
 
               <button
                 type="submit"
-                disabled={busy || (mode === 'login' && adminState.isAdminEmail && !adminEmailVerified)}
+                disabled={busy}
                 className="w-full py-3 px-5 text-sm font-medium text-white bg-[#7C4D25] rounded-md hover:bg-[#633D1D] disabled:opacity-50 transition-colors cursor-pointer"
               >
                 {busy
